@@ -3,14 +3,13 @@ using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
-    public GameObject enemyPrefab;
-    public int maxEnemies = 10; // Máximo de enemigos en la escena
-    public float spawnInterval = 5f; // Tiempo entre cada spawn
+    public GameObject[] enemyPrefabs;
+    public int maxEnemies = 10;
+    public float spawnInterval = 5f;
+    public Vector2 spawnAreaMin = new Vector2(-8, -8);
+    public Vector2 spawnAreaMax = new Vector2(8, 8);
 
-    public Vector2 spawnAreaMin = new Vector2(-8, -8); // Límite inferior izquierdo
-    public Vector2 spawnAreaMax = new Vector2(8, 8); // Límite superior derecho
-
-    private int currentEnemies = 0; // Contador de enemigos en escena
+    private int currentEnemies = 0;
 
     void Start()
     {
@@ -23,34 +22,17 @@ public class EnemySpawner : MonoBehaviour
         {
             if (currentEnemies < maxEnemies)
             {
-                Vector2 spawnPosition = GetValidSpawnPosition();
+                Vector2 spawnPosition = new Vector2(
+                    Random.Range(spawnAreaMin.x, spawnAreaMax.x),
+                    Random.Range(spawnAreaMin.y, spawnAreaMax.y)
+                );
 
-                if (spawnPosition != Vector2.zero)
-                {
-                    Instantiate(enemyPrefab, spawnPosition, Quaternion.identity);
-                    currentEnemies++;
-                }
+                int randomIndex = Random.Range(0, enemyPrefabs.Length);
+                Instantiate(enemyPrefabs[randomIndex], spawnPosition, Quaternion.identity);
+                currentEnemies++;
             }
+
             yield return new WaitForSeconds(spawnInterval);
         }
-    }
-
-    Vector2 GetValidSpawnPosition()
-    {
-        for (int i = 0; i < 10; i++) // Intentamos encontrar un lugar válido hasta 10 veces
-        {
-            Vector2 randomPosition = new Vector2(
-                Random.Range(spawnAreaMin.x, spawnAreaMax.x),
-                Random.Range(spawnAreaMin.y, spawnAreaMax.y)
-            );
-
-            Collider2D hit = Physics2D.OverlapCircle(randomPosition, 0.5f);
-
-            if (hit == null) // Si no hay colisión con otro objeto, la posición es válida
-            {
-                return randomPosition;
-            }
-        }
-        return Vector2.zero; // Si no encontró una posición válida, regresa (0,0) y se ignora el spawn
     }
 }
