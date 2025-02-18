@@ -10,6 +10,8 @@ public class PlayerMovement : MonoBehaviour
     private SpriteRenderer spriteRenderer; // Para voltear el sprite del jugador
     private Animator animator; // Controlador de animaciones
 
+    public Transform firePoint; // 🔥 Referencia al punto de disparo
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -23,11 +25,17 @@ public class PlayerMovement : MonoBehaviour
         movement.x = Input.GetAxisRaw("Horizontal");
         movement.y = Input.GetAxisRaw("Vertical");
 
-        // Cambiar la dirección del sprite si se mueve a la izquierda o derecha
+        // Cambiar la dirección del sprite y rotar FirePoint si se mueve a la izquierda o derecha
         if (movement.x < 0)
+        {
             spriteRenderer.flipX = true;
+            firePoint.localRotation = Quaternion.Euler(0, 180, 0); // 🔄 Girar el FirePoint
+        }
         else if (movement.x > 0)
+        {
             spriteRenderer.flipX = false;
+            firePoint.localRotation = Quaternion.Euler(0, 0, 0); // 🔄 Restaurar FirePoint
+        }
 
         // Verificar si el jugador se está moviendo
         bool isMoving = movement.magnitude > 0;

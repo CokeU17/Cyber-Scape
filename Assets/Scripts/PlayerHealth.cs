@@ -1,30 +1,29 @@
 using UnityEngine;
-using UnityEngine.SceneManagement; // Necesario para reiniciar la escena
 
 public class PlayerHealth : MonoBehaviour
 {
-    public int maxHP = 3; // Vida máxima del jugador
-    private int currentHP; // Vida actual del jugador
+    public int maxHealth = 5;
+    private int currentHealth;
 
     void Start()
     {
-        currentHP = maxHP; // Inicia con la vida máxima
+        currentHealth = maxHealth;
     }
 
     public void TakeDamage(int damage)
     {
-        currentHP -= damage; // Reduce la vida del jugador
-        Debug.Log("Vida restante: " + currentHP);
+        currentHealth -= damage;
+        Debug.Log("Jugador recibió daño. Vida restante: " + currentHealth);
 
-        if (currentHP <= 0)
+        if (currentHealth <= 0)
         {
-            Die(); // Si la vida llega a 0, el jugador muere
+            Die();
         }
     }
 
     void Die()
     {
         Debug.Log("El jugador ha muerto.");
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name); // Reinicia el nivel
+        // Aquí puedes añadir efectos de muerte, reiniciar nivel, etc.
     }
 }
